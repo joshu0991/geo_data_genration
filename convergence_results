@@ -1,0 +1,22 @@
+Total elements in cluster 19500
+elapsed time 2.193450927734375e-05
+Total elements in cluster 13000
+elapsed time 1.6285209655761719
+Total elements in cluster 9000
+elapsed time 3.715574026107788
+Total elements in cluster 3000
+elapsed time 7.914497137069702
+Total elements in cluster 2000
+elapsed time 15.42556095123291
+Total elements in cluster 500
+elapsed time 28.588995933532715
+Total elements in cluster 500
+elapsed time 57.74267911911011
+Total elements in cluster 251
+elapsed time 123.55086588859558
+Total elements in cluster 97
+elapsed time 257.6618628501892
+Total elements in cluster 37
+elapsed time 565.0917119979858
+Total clusters after resizing 4096
+

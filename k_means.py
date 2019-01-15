@@ -1,17 +1,20 @@
 from common import load_file_kmeans
 import matplotlib.pyplot as plt
 import math
+import time
+
 #%matplotlib inline
 
 import numpy as np
 from sklearn.cluster import KMeans
 
 class KMeanWrapper:
-    def __init__(self, file_name, n_clusters):
+    def __init__(self, file_name, n_clusters, tolerence):
         # X is long lat, and Y are ids/names
         self._X, self._Y = load_file_kmeans(file_name)
         self._clusters = n_clusters
 
+        """
         # Test small data set
         self._X = np.array([[5, 3],
                       [10, 15],
@@ -27,10 +30,12 @@ class KMeanWrapper:
                       [55, 52],
                       [4, 5],
                       [80, 91], ])
+        """
 
         # start with a small number of clusters adjust later if we need to
         self._kmeans = KMeans(n_clusters=self._clusters)
         self._kmeans.fit(self._X)
+        self._tolerence = tolerence
 
     def get_data_and_labels(self):
         return self._X, self._Y
@@ -41,8 +46,9 @@ class KMeanWrapper:
     def recluster(self, clusters):
         self._clusters = clusters
         self._kmeans = KMeans(n_clusters=clusters)
+        self._kmeans.fit(self._X)
 
-    def kmeans_labels(self):
+    def data_labels(self):
         return self._kmeans.labels_
 
     def predict(self, arr):
@@ -52,15 +58,14 @@ class KMeanWrapper:
         counter = 0
         keys = list()
         cluster = list()
-        ret = list()
 
         # Extract all the indecies for the group
-        for i in self.kmeans_labels():
+        for i in self._kmeans.labels_:
             if i == label:
                 keys.append(counter)
             counter = counter + 1
 
-        print('Keys are ' + str(keys))
+        #print('Keys are ' + str(keys))
         for i in keys:
             cluster.append((self._Y[i], self._X[i], i))
 
@@ -74,42 +79,83 @@ class KMeanWrapper:
         target_euclidean = math.sqrt((long * long) + (lat * lat))
         for i in clus:
             # euclidean of long. and lat.
-            euclidean_distance = math.sqrt((i[1][0] * i[1][0]) + (i[1][1] * i[1][1]))
+            euclidean_distance = math.sqrt((float(i[1][0]) * float(i[1][0])) + (float(i[1][1]) * float(i[1][1])))
+
             magnitude = abs(target_euclidean - euclidean_distance)
             temp.append((magnitude, index))
             index = index + 1
 
         temp = sorted(temp, key=lambda x: x[0])
-        print('sorted list is ' + str(temp))
+        #print('sorted list is ' + str(temp))
         for i in range(size):
             ret.append(clus[temp[i][1]])
-
         return ret
+
+    def find_closest_n_resize(self, size, clus, long, lat, label, epsilon, elapsed_time_tolerence):
+        clus_size = self._clusters
+        ep = 0
+        timer_start = time.time()
+        best_cluster_size = len(clus)
+        best_cluster_number = self._clusters
+        time_for_this_clustering = 0
+
+        while len(clus) > self._tolerence and \
+                ep < epsilon and \
+                time.time() - timer_start < elapsed_time_tolerence:
+            cluster_start = time.time()
+            print('Total elements in cluster ' + str(len(clus)))
+            print('elapsed time ' + str(time.time() - timer_start))
+            clus_size = clus_size * 2
+            self.recluster(clus_size)
+            clus = self.find_cluster(label)
+
+
+            if len(clus) < best_cluster_size:
+                best_cluster_size = len(clus)
+                best_cluster_number = clus_size
+
+            if (time.time() - cluster_start) + (time.time() - timer_start) > elapsed_time_tolerence:
+                break
+
+            ep = ep + 1
+
+        if self._clusters != best_cluster_number:
+            print('Reverting to a better cluster assignment')
+            self.recluster(clus_size)
+            clus = self.find_cluster(label)
+
+        print('Total clusters after resizing ' + str(self._clusters))
+        return self.find_closest_n(size, clus, long, lat)
 
 print('Starting')
 
-km = KMeanWrapper('recent_geo_location_dataset.dat', 4)
+km = KMeanWrapper('recent_geo_location_dataset.dat', 4, 5)
 
 """
     Test data the test data set
 """
 X, Y = km.get_data_and_labels()
-print('labels are ' + str(km.kmeans_labels()))
+print('labels are ' + str(km.data_labels()))
 
 # Example long, lat
-ar = [5, 6]
+#ar = [5, 6]
+ar = [37.71012, -77.109676]
 d = list()
 d.append(ar)
 X_prime = np.array(d)
+
 predicted_cluster_label = km.predict(X_prime)
-print('predicted label for [5, 6] is: ' + str(predicted_cluster_label[0]))
+print('predicted label for point is: ' + str(predicted_cluster_label[0]))
 
 cluster = km.find_cluster(predicted_cluster_label)
-closest_n = km.find_closest_n(2, cluster, 5, 6)
+closest_n = km.find_closest_n(2, cluster, ar[0], ar[1])
 print('Closest n is ' + str(closest_n))
 
+closest_n = km.find_closest_n_resize(2, cluster, ar[0], ar[1], predicted_cluster_label, 10, 1500)
+print('Closest n resize is ' + str(closest_n))
+
 plt.scatter(X[:,0],X[:,1], label='True Position')
-plt.scatter(X[:,0], X[:,1], c=km.kmeans_labels(), cmap='rainbow')
+plt.scatter(X[:,0], X[:,1], c=km.data_labels(), cmap='rainbow')
 plt.scatter(km.get_centers()[:,0] ,km.get_centers()[:,1], color='black')
 
 print('Done')
