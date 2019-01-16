@@ -110,7 +110,7 @@ class KMeanWrapper:
             print('elapsed time ' + str(time.time() - timer_start))
             clus_size = clus_size * 2
             self.recluster(clus_size)
-            label =  km.predict(X_prime)
+            label =  self._kmeans.predict(X_prime)
             print('New predicted labl ' + str(label))
             clus = self.find_cluster(label)
 
@@ -132,36 +132,39 @@ class KMeanWrapper:
         print('Total clusters after resizing ' + str(self._clusters))
         return self.find_closest_n(size, clus, long, lat, data_time)
 
-print('Starting')
+def main():
+    print('Starting')
 
-#km = KMeanWrapper('recent_geo_location_dataset.dat', 4, 5)
-km = KMeanWrapper('recent_geo_location_dataset_small.dat', 4, 5)
+    #km = KMeanWrapper('recent_geo_location_dataset.dat', 4, 5)
+    km = KMeanWrapper('recent_geo_location_dataset_small.dat', 4, 5)
 
-"""
-    Test data the test data set
-"""
-X, Y = km.get_data_and_labels()
-print('labels are ' + str(km.data_labels()))
+    """
+        Test data the test data set
+    """
+    X, Y = km.get_data_and_labels()
+    print('labels are ' + str(km.data_labels()))
 
-# Example long, lat
-#ar = [5, 6]
-ar = [30.659207, -120.79248, 1546107187]
-d = list()
-d.append(ar)
-X_prime = np.array(d)
+    # Example long, lat
+    #ar = [5, 6]
+    ar = [30.659207, -120.79248, 1546107187]
+    d = list()
+    d.append(ar)
+    X_prime = np.array(d)
 
-predicted_cluster_label = km.predict(X_prime)
-print('predicted label for point is: ' + str(predicted_cluster_label[0]))
+    predicted_cluster_label = km.predict(X_prime)
+    print('predicted label for point is: ' + str(predicted_cluster_label[0]))
 
-cluster = km.find_cluster(predicted_cluster_label)
-closest_n = km.find_closest_n(2, cluster, ar[0], ar[1], ar[2])
-print('Closest n is ' + str(closest_n))
+    cluster = km.find_cluster(predicted_cluster_label)
+    closest_n = km.find_closest_n(2, cluster, ar[0], ar[1], ar[2])
+    print('Closest n is ' + str(closest_n))
 
-closest_n = km.find_closest_n_resize(2, cluster, X_prime, ar[0], ar[1], ar[2], predicted_cluster_label, 10, 1500)
-print('Closest n resize is ' + str(closest_n))
+    closest_n = km.find_closest_n_resize(2, cluster, X_prime, ar[0], ar[1], ar[2], predicted_cluster_label, 10, 1500)
+    print('Closest n resize is ' + str(closest_n))
 
-plt.scatter(X[:,0],X[:,1], label='True Position')
-plt.scatter(X[:,0], X[:,1], c=km.data_labels(), cmap='rainbow')
-plt.scatter(km.get_centers()[:,0] ,km.get_centers()[:,1], color='black')
+    plt.scatter(X[:,0],X[:,1], label='True Position')
+    plt.scatter(X[:,0], X[:,1], c=km.data_labels(), cmap='rainbow')
+    plt.scatter(km.get_centers()[:,0] ,km.get_centers()[:,1], color='black')
 
-print('Done')
+    print('Done')
+
+if __name__ == "__main__": main()
