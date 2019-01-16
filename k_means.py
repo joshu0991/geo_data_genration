@@ -94,7 +94,7 @@ class KMeanWrapper:
             ret.append(clus[temp[i][2]])
         return ret
 
-    def find_closest_n_resize(self, size, clus, long, lat, label, epsilon, elapsed_time_tolerence):
+    def find_closest_n_resize(self, size, clus, X_prime, long, lat, data_time, label, epsilon, elapsed_time_tolerence):
         clus_size = self._clusters
         ep = 0
         timer_start = time.time()
@@ -110,6 +110,8 @@ class KMeanWrapper:
             print('elapsed time ' + str(time.time() - timer_start))
             clus_size = clus_size * 2
             self.recluster(clus_size)
+            label =  km.predict(X_prime)
+            print('New predicted labl ' + str(label))
             clus = self.find_cluster(label)
 
 
@@ -128,7 +130,7 @@ class KMeanWrapper:
             clus = self.find_cluster(label)
 
         print('Total clusters after resizing ' + str(self._clusters))
-        return self.find_closest_n(size, clus, long, lat)
+        return self.find_closest_n(size, clus, long, lat, data_time)
 
 print('Starting')
 
@@ -143,7 +145,7 @@ print('labels are ' + str(km.data_labels()))
 
 # Example long, lat
 #ar = [5, 6]
-ar = [37.71012, -77.109676, 1546354603]
+ar = [30.659207, -120.79248, 1546107187]
 d = list()
 d.append(ar)
 X_prime = np.array(d)
@@ -155,7 +157,7 @@ cluster = km.find_cluster(predicted_cluster_label)
 closest_n = km.find_closest_n(2, cluster, ar[0], ar[1], ar[2])
 print('Closest n is ' + str(closest_n))
 
-closest_n = km.find_closest_n_resize(2, cluster, ar[0], ar[1], predicted_cluster_label, 10, 1500)
+closest_n = km.find_closest_n_resize(2, cluster, X_prime, ar[0], ar[1], ar[2], predicted_cluster_label, 10, 1500)
 print('Closest n resize is ' + str(closest_n))
 
 plt.scatter(X[:,0],X[:,1], label='True Position')
