@@ -108,9 +108,8 @@ def gen_person(label, points_per_person, long, lat, counter):
         ret_list.append(s)
     return ret_list
 
-
 def gen_recent_data(total_points, cluster_size, points_per_person):
-    f = open('recent_geo_location_dataset.dat', 'w+')
+    f = open('recent_geo_location_dataset_small.dat', 'w+')
 
     for _ in range(int(total_points / cluster_size)):
         lat = round(random.uniform(lower_lat, upper_lat), 6)
@@ -125,6 +124,6 @@ def gen_recent_data(total_points, cluster_size, points_per_person):
 
     f.close()
 
-gen_recent_data(1000, 5, 100)
+gen_recent_data(25, 3, 2)
 
 gen_longterm_data(1000, 5)

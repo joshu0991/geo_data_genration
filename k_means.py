@@ -7,6 +7,7 @@ import time
 
 import numpy as np
 from sklearn.cluster import KMeans
+import operator
 
 class KMeanWrapper:
     def __init__(self, file_name, n_clusters, tolerence):
@@ -16,20 +17,20 @@ class KMeanWrapper:
 
         """
         # Test small data set
-        self._X = np.array([[5, 3],
-                      [10, 15],
-                      [5, 5],
-                      [15, 12],
-                      [24, 10],
-                      [30, 45],
-                      [5, 4],
-                      [85, 70],
-                      [71, 80],
-                      [4, 3],
-                      [60, 78],
-                      [55, 52],
-                      [4, 5],
-                      [80, 91], ])
+        self._X = np.array([[5, 3, 12],
+                      [10, 15, 34],
+                      [5, 5, 14],
+                      [15, 12, 35],
+                      [24, 10, 67],
+                      [30, 45, 77],
+                      [5, 4, 12],
+                      [85, 70, 34],
+                      [71, 80, 67],
+                      [4, 3, 8],
+                      [60, 78, 23],
+                      [55, 52, 45],
+                      [4, 5, 14],
+                      [80, 91, 44], ])
         """
 
         # start with a small number of clusters adjust later if we need to
@@ -71,7 +72,7 @@ class KMeanWrapper:
 
         return cluster
 
-    def find_closest_n(self, size, clus, long, lat):
+    def find_closest_n(self, size, clus, long, lat, time):
         temp = list()
         ret = list()
 
@@ -82,13 +83,15 @@ class KMeanWrapper:
             euclidean_distance = math.sqrt((float(i[1][0]) * float(i[1][0])) + (float(i[1][1]) * float(i[1][1])))
 
             magnitude = abs(target_euclidean - euclidean_distance)
-            temp.append((magnitude, index))
+            time_delta = abs(time - int(i[1][2]))
+            temp.append((magnitude, time_delta, index))
             index = index + 1
 
-        temp = sorted(temp, key=lambda x: x[0])
+        temp = sorted(temp, key=operator.itemgetter(0, 1))
         #print('sorted list is ' + str(temp))
+
         for i in range(size):
-            ret.append(clus[temp[i][1]])
+            ret.append(clus[temp[i][2]])
         return ret
 
     def find_closest_n_resize(self, size, clus, long, lat, label, epsilon, elapsed_time_tolerence):
@@ -129,7 +132,8 @@ class KMeanWrapper:
 
 print('Starting')
 
-km = KMeanWrapper('recent_geo_location_dataset.dat', 4, 5)
+#km = KMeanWrapper('recent_geo_location_dataset.dat', 4, 5)
+km = KMeanWrapper('recent_geo_location_dataset_small.dat', 4, 5)
 
 """
     Test data the test data set
@@ -139,7 +143,7 @@ print('labels are ' + str(km.data_labels()))
 
 # Example long, lat
 #ar = [5, 6]
-ar = [37.71012, -77.109676]
+ar = [37.71012, -77.109676, 1546354603]
 d = list()
 d.append(ar)
 X_prime = np.array(d)
@@ -148,7 +152,7 @@ predicted_cluster_label = km.predict(X_prime)
 print('predicted label for point is: ' + str(predicted_cluster_label[0]))
 
 cluster = km.find_cluster(predicted_cluster_label)
-closest_n = km.find_closest_n(2, cluster, ar[0], ar[1])
+closest_n = km.find_closest_n(2, cluster, ar[0], ar[1], ar[2])
 print('Closest n is ' + str(closest_n))
 
 closest_n = km.find_closest_n_resize(2, cluster, ar[0], ar[1], predicted_cluster_label, 10, 1500)

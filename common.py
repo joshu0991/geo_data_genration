@@ -29,7 +29,8 @@ def load_file_kmeans(file_name):
             id = r[0]
             long = r[1]
             lat = r[2]
-            arr = [long, lat]
+            time = r[5]
+            arr = [long, lat, time]
             data.append(arr)
             labels.append(id)
 
