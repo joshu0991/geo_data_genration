@@ -2,10 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn.cluster import AgglomerativeClustering
+from common import load_file_clus
 
 class AgglomerativeCluster:
     def __init__(self, file_name, cluster_numbers):
         self._X, self._Y = load_file_clus(file_name)
+        self._X = self._X.astype(np.float64)
         self._linked = linkage(self._X, 'single')
         self._cluster = AgglomerativeClustering(n_clusters=cluster_numbers, affinity='euclidean', linkage='ward')
         self._cluster.fit_predict(self._X)
@@ -31,4 +33,6 @@ class AgglomerativeCluster:
         plt.scatter(self._X[:, 0], self._X[:, 1], c=self._cluster.labels_, cmap='rainbow')
 
 
-ag = AgglomerativeCluster()
+ag = AgglomerativeCluster('recent_geo_location_dataset_small.dat', 4)
+plt.scatter(ag._X[:,0],ag._X[:,1], c=ag.get_labels(), cmap='rainbow')
+
