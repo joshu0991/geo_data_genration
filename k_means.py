@@ -12,7 +12,7 @@ import operator
 class KMeanWrapper:
     def __init__(self, file_name, n_clusters, tolerence):
         # X is long lat, and Y are ids/names
-        self._X, self._Y = load_file_kmeans(file_name)
+        self._X, self._Y = load_file_clus(file_name)
         self._clusters = n_clusters
 
         """

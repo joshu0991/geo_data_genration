@@ -18,7 +18,7 @@ def load_file(file_name):
     Y = np.array(labels)
     return X, Y
 
-def load_file_kmeans(file_name):
+def load_file_clus(file_name):
     data = list()
     labels = list()
     with open(file_name, 'r') as file:
