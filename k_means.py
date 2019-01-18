@@ -1,4 +1,4 @@
-from common import load_file_kmeans
+from common import load_file_clus
 import matplotlib.pyplot as plt
 import math
 import time
@@ -164,6 +164,7 @@ def main():
     plt.scatter(X[:,0],X[:,1], label='True Position')
     plt.scatter(X[:,0], X[:,1], c=km.data_labels(), cmap='rainbow')
     plt.scatter(km.get_centers()[:,0] ,km.get_centers()[:,1], color='black')
+    plt.show()
 
     print('Done')
 

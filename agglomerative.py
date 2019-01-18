@@ -33,6 +33,7 @@ class AgglomerativeCluster:
         plt.scatter(self._X[:, 0], self._X[:, 1], c=self._cluster.labels_, cmap='rainbow')
 
 
-ag = AgglomerativeCluster('recent_geo_location_dataset_small.dat', 4)
+ag = AgglomerativeCluster('recent_geo_location_dataset_small.dat', 10)
 plt.scatter(ag._X[:,0],ag._X[:,1], c=ag.get_labels(), cmap='rainbow')
+plt.show()
 
