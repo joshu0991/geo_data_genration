@@ -124,6 +124,67 @@ def gen_recent_data(total_points, cluster_size, points_per_person):
 
     f.close()
 
-gen_recent_data(25, 3, 2)
+def gen_routine_and_anamoly(long, lat, total, l):
+    # Typical routine for person l
+    ret_list = []
+    lat_1 = round(lat + round(
+        random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+    long_1 = round(long + round(
+        random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+    lat_2 = round(lat + round(
+        random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+    long_2 = round(long + round(
+        random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+    lat_3 = round(lat + round(
+        random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+    long_3 = round(long + round(
+        random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+    lat_4 = round(lat + round(
+        random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+    long_4 = round(long + round(
+        random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
 
-gen_longterm_data(1000, 5)
+    ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
+
+    for i in range(total):
+        # We go to each of the 4 every day four hours apart
+        s1 = l + sep + str(lat_1) + sep + str(long_1) + sep + str(ts)
+        ts = ts + 14400
+        ret_list.append(s1)
+        s2 = l + sep + str(lat_2) + sep + str(long_2) + sep + str(ts)
+        ts = ts + 14400
+        ret_list.append(s2)
+        s3 = l + sep + str(lat_3) + sep + str(long_3) + sep + str(ts)
+        ts = ts + 14400
+        ret_list.append(s3)
+        s4 = l + sep + str(lat_4) + sep + str(long_4) + sep + str(ts)
+        ts = ts + 14400
+        ret_list.append(s4)
+
+    # make an anamoly
+    lat_a = round(random.uniform(lower_lat, upper_lat), 6)
+    long_a = round(random.uniform(lower_long, upper_long), 6)
+    ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
+    s5 = l + sep + str(lat_a) + sep + str(long_a) + sep + str(ts)
+    ret_list.append(s5)
+    return ret_list
+
+def gen_single_person(total_points):
+    f = open('pol_recent_geo_location_dataset_small.dat', 'w+')
+    r = random.randint(0, 25)
+    l = labels[r]
+    lat = round(random.uniform(lower_lat, upper_lat), 6)
+    long = round(random.uniform(lower_long, upper_long), 6)
+    points = gen_routine_and_anamoly(long, lat, total_points, l)
+
+    for point in points:
+        print(point)
+        f.write("{0}\n".format(point))
+
+
+    f.close()
+gen_single_person(5)
+
+#gen_recent_data(25, 3, 2)
+
+#gen_longterm_data(1000, 5)
