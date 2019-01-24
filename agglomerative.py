@@ -1,14 +1,18 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.cluster.hierarchy import dendrogram, linkage
 from sklearn.cluster import AgglomerativeClustering
 from common import load_file_clus
+
+import matplotlib.pyplot as plt
+# Though the following import is not directly being used, it is required
+# for 3D projection to work
 from mpl_toolkits.mplot3d import Axes3D
+
 
 class AgglomerativeCluster:
     def __init__(self, file_name, cluster_numbers):
         self._X, self._Y = load_file_clus(file_name)
-
+        """
         self._X = np.array([[5, 3, 12],
                       [10, 15, 34],
                       [5, 5, 14],
@@ -23,7 +27,7 @@ class AgglomerativeCluster:
                       [55, 52, 45],
                       [4, 5, 14],
                       [80, 91, 44], ])
-
+        """
         self._X = self._X.astype(np.float64)
         self._cluster = AgglomerativeClustering(n_clusters=cluster_numbers, affinity='euclidean', linkage='ward')
         self._cluster.fit_predict(self._X)
@@ -32,51 +36,38 @@ class AgglomerativeCluster:
     def get_labels(self):
         return self._cluster.labels_
 
-    def plot_points_2d(self, range_upper):
-        labels = range(1, range_upper)
-        plt.figure(figsize=(10, 7))
-        plt.subplots_adjust(bottom=0.1)
-        plt.scatter(X[:, 0], X[:, 1], label='True Position')
-
-        for label, x, y in zip(labels, X[:, 0], X[:, 1]):
-            plt.annotate(
-                label,
-                xy=(x, y), xytext=(-3, 3),
-                textcoords='offset points', ha='right', va='bottom')
-        plt.show()
-
-    def plot_clusters_2d(self):
-        plt.scatter(self._X[:, 0], self._X[:, 1], c=self._cluster.labels_, cmap='rainbow')
-        plt.show()
-
     def plot_points_3d(self):
         fignum = 1
         fig = plt.figure(fignum, figsize=(4, 3))
         ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
         labels = self.get_labels()
 
-        ax.scatter(self._X[:, 2], self._X[:, 0], self._X[:, 1],
+        ax.scatter(self._X[:, 0], self._X[:, 1], self._X[:, 2],
                    c=labels.astype(np.float), edgecolor='k')
 
         ax.w_xaxis.set_ticklabels([])
         ax.w_yaxis.set_ticklabels([])
         ax.w_zaxis.set_ticklabels([])
-        ax.set_xlabel('time')
-        ax.set_ylabel('long')
-        ax.set_zlabel('lat')
+        ax.set_xlabel('longitude')
+        ax.set_ylabel('latitude')
+        ax.set_zlabel('time')
         ax.dist = 12
-        fignum = fignum + 1
-        fig.show()
-
-    def plot_clusters_3d(self):
-        pass
+        plt.show()
 
     def plot_dendogram(self):
-        pass
+        linked = linkage(self._X, 'single')
+
+        labelList = self.get_labels()
+
+        plt.figure(figsize=(10, 7))
+        dendrogram(linked,
+                   orientation='top',
+                   labels=labelList,
+                   distance_sort='descending',
+                   show_leaf_counts=True)
+        plt.show()
 
 
-ag = AgglomerativeCluster('recent_geo_location_dataset_small.dat', 2)
-ag.plot_points_3d()
-
-#plt.scatter(ag._X[:,0],ag._X[:,1], c=ag.get_labels(), cmap='rainbow')
-#plt.show()
+ag = AgglomerativeCluster('recent_geo_location_dataset_small.dat', 6)
+#ag.plot_points_3d()
+ag.plot_dendogram()
