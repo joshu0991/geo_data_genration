@@ -68,6 +68,6 @@ class AgglomerativeCluster:
         plt.show()
 
 
-ag = AgglomerativeCluster('recent_geo_location_dataset_small.dat', 6)
-#ag.plot_points_3d()
+ag = AgglomerativeCluster('recent_geo_location_dataset_small.dat', 3)
+ag.plot_points_3d()
 ag.plot_dendogram()

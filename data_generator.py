@@ -161,7 +161,22 @@ def gen_routine_and_anamoly(long, lat, total, l):
         ts = ts + 14400
         ret_list.append(s4)
 
-    # make an anamoly
+    # make a few anamolies
+    lat_a = round(random.uniform(lower_lat, upper_lat), 6)
+    long_a = round(random.uniform(lower_long, upper_long), 6)
+    ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
+    s5 = l + sep + str(lat_a) + sep + str(long_a) + sep + str(ts)
+    ret_list.append(s5)
+    lat_a = round(random.uniform(lower_lat, upper_lat), 6)
+    long_a = round(random.uniform(lower_long, upper_long), 6)
+    ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
+    s5 = l + sep + str(lat_a) + sep + str(long_a) + sep + str(ts)
+    ret_list.append(s5)
+    lat_a = round(random.uniform(lower_lat, upper_lat), 6)
+    long_a = round(random.uniform(lower_long, upper_long), 6)
+    ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
+    s5 = l + sep + str(lat_a) + sep + str(long_a) + sep + str(ts)
+    ret_list.append(s5)
     lat_a = round(random.uniform(lower_lat, upper_lat), 6)
     long_a = round(random.uniform(lower_long, upper_long), 6)
     ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)

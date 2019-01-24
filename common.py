@@ -37,3 +37,19 @@ def load_file_clus(file_name):
     X = np.array(data)
     Y = np.array(labels)
     return X, Y
+
+def load_file_outliers(file_name):
+    data = list()
+    with open(file_name, 'r') as file:
+        csv_reader = reader(file)
+        for r in csv_reader:
+            if not r:
+                continue
+            id = r[0]
+            long = r[1]
+            lat = r[2]
+            time = r[3]
+            arr = [long, lat, time]
+            data.append(arr)
+    X = np.array(data)
+    return X
