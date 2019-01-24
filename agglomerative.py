@@ -50,7 +50,23 @@ class AgglomerativeCluster:
         plt.show()
 
     def plot_points_3d(self):
-        pass
+        fignum = 1
+        fig = plt.figure(fignum, figsize=(4, 3))
+        ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
+        labels = self.get_labels()
+
+        ax.scatter(self._X[:, 2], self._X[:, 0], self._X[:, 1],
+                   c=labels.astype(np.float), edgecolor='k')
+
+        ax.w_xaxis.set_ticklabels([])
+        ax.w_yaxis.set_ticklabels([])
+        ax.w_zaxis.set_ticklabels([])
+        ax.set_xlabel('time')
+        ax.set_ylabel('long')
+        ax.set_zlabel('lat')
+        ax.dist = 12
+        fignum = fignum + 1
+        fig.show()
 
     def plot_clusters_3d(self):
         pass
@@ -58,8 +74,9 @@ class AgglomerativeCluster:
     def plot_dendogram(self):
         pass
 
-"""
+
 ag = AgglomerativeCluster('recent_geo_location_dataset_small.dat', 2)
-plt.scatter(ag._X[:,0],ag._X[:,1], c=ag.get_labels(), cmap='rainbow')
-plt.show()
-"""
+ag.plot_points_3d()
+
+#plt.scatter(ag._X[:,0],ag._X[:,1], c=ag.get_labels(), cmap='rainbow')
+#plt.show()
