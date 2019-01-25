@@ -50,28 +50,11 @@ class IsoForest:
         ax.dist = 12
         plt.show()
 
-        """
-        b1 = plt.scatter(train[:, 0], train[:, 1], c='white',
-                         s=20, edgecolor='k')
-        b2 = plt.scatter(norm[:, 0], norm[:, 1], c='green',
-                         s=20, edgecolor='k')
-        c = plt.scatter(outliers[:, 0], outliers[:, 1], c='red',
-                        s=20, edgecolor='k')
-        plt.axis('tight')
-        plt.xlim((-5, 5))
-        plt.ylim((-5, 5))
-        plt.legend([b1, b2, c],
-                   ["training observations",
-                    "new regular observations", "new abnormal observations"],
-                   loc="upper left")
-        plt.show()
-        """
-
 iso = IsoForest('pol_recent_geo_location_dataset_small.dat', 12)
 
 length = len(iso._X)
 train_length = int(length/2)
-outlier_start = length - 4
+outlier_start = length - 5
 
 outliers = iso._X[outlier_start:]
 train = iso._X[0:train_length]

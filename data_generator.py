@@ -155,7 +155,7 @@ def gen_routine_and_anamoly(long, lat, total, l):
         ts = ts + 14400
         ret_list.append(s2)
         s3 = l + sep + str(lat_3) + sep + str(long_3) + sep + str(ts)
-        ts = ts + 14400
+        ts = ts + 28800
         ret_list.append(s3)
         s4 = l + sep + str(lat_4) + sep + str(long_4) + sep + str(ts)
         ts = ts + 14400
@@ -182,6 +182,15 @@ def gen_routine_and_anamoly(long, lat, total, l):
     ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
     s5 = l + sep + str(lat_a) + sep + str(long_a) + sep + str(ts)
     ret_list.append(s5)
+
+    lat_a = round(lat + round(
+        random.uniform(long_lat_delta_lower+2, long_lat_delta_upper+2), 6), 6)
+    long_a = round(long + round(
+        random.uniform(long_lat_delta_lower+2, long_lat_delta_upper+2), 6), 6)
+    ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
+    s5 = l + sep + str(lat_a) + sep + str(long_a) + sep + str(ts)
+    ret_list.append(s5)
+
     return ret_list
 
 def gen_single_person(total_points):
