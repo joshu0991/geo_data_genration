@@ -147,6 +147,23 @@ def gen_routine_and_anamoly(long, lat, total, l):
     ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
 
     for i in range(total):
+        lat_1 = round(lat + round(
+            random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+        long_1 = round(long + round(
+            random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+        lat_2 = round(lat + round(
+            random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+        long_2 = round(long + round(
+            random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+        lat_3 = round(lat + round(
+            random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+        long_3 = round(long + round(
+            random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+        lat_4 = round(lat + round(
+            random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+        long_4 = round(long + round(
+            random.uniform(long_lat_delta_lower, long_lat_delta_upper), 6), 6)
+
         # We go to each of the 4 every day four hours apart
         s1 = l + sep + str(lat_1) + sep + str(long_1) + sep + str(ts)
         ts = ts + 14400
@@ -191,6 +208,13 @@ def gen_routine_and_anamoly(long, lat, total, l):
     s5 = l + sep + str(lat_a) + sep + str(long_a) + sep + str(ts)
     ret_list.append(s5)
 
+    lat_a = round(lat + round(
+        random.uniform(long_lat_delta_lower+1, long_lat_delta_upper+1), 6), 6)
+    long_a = round(long + round(
+        random.uniform(long_lat_delta_lower+1, long_lat_delta_upper+1), 6), 6)
+    ts = round(random.uniform(lower_timestamp, upper_timestamp), 0)
+    s5 = l + sep + str(lat_a) + sep + str(long_a) + sep + str(ts)
+    ret_list.append(s5)
     return ret_list
 
 def gen_single_person(total_points):
@@ -207,7 +231,7 @@ def gen_single_person(total_points):
 
 
     f.close()
-gen_single_person(5)
+gen_single_person(20)
 
 #gen_recent_data(25, 3, 2)
 

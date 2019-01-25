@@ -21,13 +21,6 @@ class IsoForest:
         return y_pred_test, y_pred_outliers
 
     def plot_long_lat(self, train, norm, outliers):
-        #xx, yy, zz = np.meshgrid(np.linspace(-5, 5, 50), np.linspace(-5, 5, 50))
-        #Z = self._iso.decision_function(np.c_[xx.ravel(), yy.ravel(), zz.ravel()])
-        #Z = Z.reshape(xx.shape)
-
-        #plt.title("IsolationForest")
-        #plt.contourf(xx, yy, Z, cmap=plt.cm.Blues_r)
-
         fignum = 1
         fig = plt.figure(fignum, figsize=(4, 3))
         ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
@@ -54,7 +47,7 @@ iso = IsoForest('pol_recent_geo_location_dataset_small.dat', 12)
 
 length = len(iso._X)
 train_length = int(length/2)
-outlier_start = length - 5
+outlier_start = length - 6
 
 outliers = iso._X[outlier_start:]
 train = iso._X[0:train_length]
